@@ -1,0 +1,26 @@
+<mat-sidenav-container class="h-100p">
+    <mat-sidenav #sidenav [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isHandset$ | async) ? 'over' : 'side'" opened>
+        <mat-toolbar color="primary" class="toolbar-content">
+            <span class="cursor-pointer" routerLink="/">Logo</span>
+        </mat-toolbar>
+        <mat-nav-list class="p-t-0" style="overflow-y: auto; height: calc(100% - 64px);">
+            <ng-container *ngFor="let route of routes">
+                <a mat-list-item [routerLink]="route.path">
+                    <mat-icon class="m-r-1">{{route.icon}}</mat-icon>
+                    <div>{{route.name | titlecase}}</div>
+                </a>
+            </ng-container>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <mat-toolbar color="primary" class="toolbar-content">
+            <button mat-icon-button (click)="sidenav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+        </mat-toolbar>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

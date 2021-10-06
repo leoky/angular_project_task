@@ -1,0 +1,30 @@
+<div>
+    <h2>{{id ? 'Detail Project' : 'Add New Project'}}</h2>
+    <mat-card ngStyle.gt-xs="width: 500px">
+        <form [formGroup]="projectForm" (ngSubmit)="submit()">
+            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                <mat-label>ID*</mat-label>
+                <input matInput placeholder="Input ID" formControlName="id">
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                <mat-label>Project Name*</mat-label>
+                <input matInput placeholder="Input Project Name" formControlName="name">
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                <mat-label>Project Slug*</mat-label>
+                <input matInput placeholder="" formControlName="slug">
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                <mat-label>Project Description</mat-label>
+                <textarea matInput placeholder="Input Project Description" formControlName="description"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                <mat-label>Project Manager*</mat-label>
+                <input matInput placeholder="Input Project Manager" formControlName="manager">
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" class="m-t-3 w-100p" type="submit"
+                [disabled]="!projectForm.valid">{{ id? 'Update' : 'Create'}}</button>
+        </form>
+    </mat-card>
+</div>

@@ -1,1 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+/* global variabel */
+@import './assets/scss/variable.scss';
+/* material theme*/
+@import './assets/scss/theme.scss';
+/* spacing - margin -padding -widht -height */
+@import './assets/scss/space.scss';
+/* standar css: container, display, text-aligin, etc*/
+@import './assets/scss/base.scss';
