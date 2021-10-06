@@ -1,7 +1,10 @@
-export interface Project{
+import { Task } from "./task";
+
+export interface Project {
     id?: string;
     name: string;
     slug?: string;
     description?: string;
     manager: string;
+    tasks?: Task[];
 }

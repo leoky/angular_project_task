@@ -1,30 +1,85 @@
 <div>
     <h2>{{id ? 'Detail Project' : 'Add New Project'}}</h2>
-    <mat-card ngStyle.gt-xs="width: 500px">
-        <form [formGroup]="projectForm" (ngSubmit)="submit()">
-            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
-                <mat-label>ID*</mat-label>
-                <input matInput placeholder="Input ID" formControlName="id">
-            </mat-form-field>
-            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
-                <mat-label>Project Name*</mat-label>
-                <input matInput placeholder="Input Project Name" formControlName="name">
-            </mat-form-field>
-            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
-                <mat-label>Project Slug*</mat-label>
-                <input matInput placeholder="" formControlName="slug">
-            </mat-form-field>
-            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
-                <mat-label>Project Description</mat-label>
-                <textarea matInput placeholder="Input Project Description" formControlName="description"></textarea>
-            </mat-form-field>
-            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
-                <mat-label>Project Manager*</mat-label>
-                <input matInput placeholder="Input Project Manager" formControlName="manager">
-            </mat-form-field>
+    <div fxLayout="row" fxLayoutGap="16px">
+        <mat-card ngStyle.gt-xs="width: 500px" fxFlex="40">
+            <form [formGroup]="projectForm" (ngSubmit)="submit()">
+                <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                    <mat-label>ID*</mat-label>
+                    <input matInput placeholder="Input ID" formControlName="id">
+                </mat-form-field>
+                <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                    <mat-label>Project Name*</mat-label>
+                    <input matInput placeholder="Input Project Name" formControlName="name">
+                </mat-form-field>
+                <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                    <mat-label>Project Slug*</mat-label>
+                    <input matInput placeholder="" formControlName="slug">
+                </mat-form-field>
+                <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                    <mat-label>Project Description</mat-label>
+                    <textarea matInput placeholder="Input Project Description" formControlName="description"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+                    <mat-label>Project Manager*</mat-label>
+                    <input matInput placeholder="Input Project Manager" formControlName="manager">
+                </mat-form-field>
 
-            <button mat-raised-button color="primary" class="m-t-3 w-100p" type="submit"
-                [disabled]="!projectForm.valid">{{ id? 'Update' : 'Create'}}</button>
-        </form>
-    </mat-card>
+                <button mat-raised-button color="primary" class="m-t-3 w-100p" type="submit"
+                    [disabled]="!projectForm.valid">{{ id? 'Update' : 'Create'}}</button>
+            </form>
+        </mat-card>
+        <div *ngIf="id" fxFlex>
+            <table mat-table [dataSource]="tasks" class="mat-elevation-z0 w-100p">
+
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="user">
+                    <th mat-header-cell *matHeaderCellDef> User </th>
+                    <td mat-cell *matCellDef="let element"> {{element.user}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef> Title </th>
+                    <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="slug">
+                    <th mat-header-cell *matHeaderCellDef> Slug </th>
+                    <td mat-cell *matCellDef="let element"> {{element.slug}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef> Description </th>
+                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dueDate">
+                    <th mat-header-cell *matHeaderCellDef> dueDate </th>
+                    <td mat-cell *matCellDef="let element"> {{element.dueDate}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button aria-label="Delete" color="warn" (click)="removeTask(element)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="cursor-pointer"
+                    (click)="goToDetail(row)"></tr>
+            </table>
+        </div>
+    </div>
 </div>

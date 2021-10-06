@@ -2,5 +2,6 @@ export const environment = {
   production: true
 };
 export const ls_name = {
-  PROJECT: 'project'
+  PROJECT: 'project',
+  TASK: 'task',
 };

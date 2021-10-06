@@ -7,7 +7,8 @@ export const environment = {
 };
 
 export const ls_name = {
-  PROJECT: 'project'
+  PROJECT: 'project',
+  TASK: 'task',
 };
 
 /*
