@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TaskService } from 'src/app/modules/admin/service/task.service';
@@ -21,19 +22,40 @@ export class TaskAddComponent implements OnInit, OnDestroy {
   id: string | null = null;
   statusOption = ['to do', 'doing', 'done'];
   projectOption: Option[] = [];
+  // ui
+  showMore = false;
 
   taskForm = this.fb.group({
     id: ['', Validators.required],
     projectId: ['', Validators.required],
     user: ['', Validators.required],
     title: ['', Validators.required],
-    slug: [ Date.now(), Validators.required],
+    slug: [
+      {
+        value: '',
+        disabled: true,
+      },
+      Validators.required
+    ],
     description: [''],
     dueDate: [''],
     status: [this.statusOption[0], Validators.required],
-  })
+  });
+
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    minHeight: '100px',
+    toolbarHiddenButtons: [
+      [
+        'insertImage',
+        'insertVideo',
+        'toggleEditorMode',
+      ]
+    ],
+  };
 
   destroy$: Subject<boolean> = new Subject<boolean>();
+
   constructor(
     private fb: FormBuilder,
     private projectService: ProjectService,
@@ -60,6 +82,11 @@ export class TaskAddComponent implements OnInit, OnDestroy {
         });
       }
     });
+    this.taskForm.get('title')?.valueChanges.subscribe(e => {
+      this.taskForm.patchValue({
+        slug: e.replace(/ /g, '-')
+      });
+    });
   }
 
   getDetail(id: string): void {
@@ -73,9 +100,9 @@ export class TaskAddComponent implements OnInit, OnDestroy {
   submit(): void {
     if (this.taskForm.value && this.taskForm.valid) {
       if (this.id) {
-        this.taskService.updateTask(this.taskForm.value);
+        this.taskService.updateTask(this.taskForm.getRawValue());
       } else {
-        this.taskService.createTask(this.taskForm.value);
+        this.taskService.createTask(this.taskForm.getRawValue());
       }
       this.router.navigate(['/admin/tasks']);
     }

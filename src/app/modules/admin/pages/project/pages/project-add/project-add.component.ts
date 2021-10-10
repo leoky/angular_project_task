@@ -18,7 +18,13 @@ export class ProjectAddComponent implements OnInit {
   projectForm = this.fb.group({
     id: ['', Validators.required],
     name: ['', Validators.required],
-    slug: [ Date.now(), Validators.required],
+    slug: [
+      {
+        value: '',
+        disabled: true,
+      },
+      Validators.required
+    ],
     description: [''],
     manager: ['', Validators.required],
   })
@@ -38,6 +44,12 @@ export class ProjectAddComponent implements OnInit {
         this.getDetail(this.id);
       }
     });
+
+    this.projectForm.get('name')?.valueChanges.subscribe(e => {
+      this.projectForm.patchValue({
+        slug: e.replace(/ /g, '-')
+      });
+    });
   }
 
   getDetail(id: string): void {
@@ -51,9 +63,9 @@ export class ProjectAddComponent implements OnInit {
   submit(): void {
     if (this.projectForm.value && this.projectForm.valid) {
       if (this.id) {
-        this.projectService.updateProject(this.projectForm.value);
+        this.projectService.updateProject(this.projectForm.getRawValue());
       } else {
-        this.projectService.createProject(this.projectForm.value);
+        this.projectService.createProject(this.projectForm.getRawValue());
       }
       this.router.navigate(['/admin/projects']);
     }

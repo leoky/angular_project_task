@@ -6,6 +6,8 @@ This project was using with [Angular Material](https://github.com/angular/compon
 
 This project was using with [Angular Flex-Layout](https://github.com/angular/flex-layout) version 12.0.0-beta.35.
 
+This project was using with [AngularEditor](https://www.npmjs.com/package/@kolkov/angular-editor) version 1.2.0.
+
 ## To Install Project
 
 First Install Angular CLI `npm install -g @angular/cli`.

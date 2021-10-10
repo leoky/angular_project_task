@@ -11,6 +11,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatTableModule,
     MatIconModule,
     MatSelectModule,
+    AngularEditorModule,
   ]
 })
 export class TaskModule { }

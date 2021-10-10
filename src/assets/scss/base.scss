@@ -6,3 +6,21 @@
 .cursor-pointer{
     cursor: pointer;
 }
+.overflow-a{
+    overflow: auto;
+}
+.overflow-x-a{
+    overflow-x: auto;
+}
+.overflow-y-a{
+    overflow-y: auto;
+}
+
+// text clamp
+.text-clamp-2{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
+} 

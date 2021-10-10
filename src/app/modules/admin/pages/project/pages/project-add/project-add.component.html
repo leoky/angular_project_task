@@ -1,6 +1,6 @@
 <div>
     <h2>{{id ? 'Detail Project' : 'Add New Project'}}</h2>
-    <div fxLayout="row" fxLayoutGap="16px">
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start start" fxLayoutGap="16px">
         <mat-card ngStyle.gt-xs="width: 500px" fxFlex="40">
             <form [formGroup]="projectForm" (ngSubmit)="submit()">
                 <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
@@ -17,7 +17,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
                     <mat-label>Project Description</mat-label>
-                    <textarea matInput placeholder="Input Project Description" formControlName="description"></textarea>
+                    <textarea rows="5" matInput placeholder="Input Project Description" formControlName="description"></textarea>
                 </mat-form-field>
                 <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
                     <mat-label>Project Manager*</mat-label>
@@ -28,47 +28,49 @@
                     [disabled]="!projectForm.valid">{{ id? 'Update' : 'Create'}}</button>
             </form>
         </mat-card>
-        <div *ngIf="id" fxFlex>
+        <div *ngIf="id" fxFlex class="overflow-a">
             <table mat-table [dataSource]="tasks" class="mat-elevation-z0 w-100p">
 
                 <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                    <th class="m-r-2" mat-header-cell *matHeaderCellDef style="min-width: 50px;"> ID </th>
                     <td mat-cell *matCellDef="let element"> {{element.id}} </td>
                 </ng-container>
 
 
                 <ng-container matColumnDef="user">
-                    <th mat-header-cell *matHeaderCellDef> User </th>
+                    <th mat-header-cell *matHeaderCellDef style="min-width: 120px;"> User </th>
                     <td mat-cell *matCellDef="let element"> {{element.user}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="title">
-                    <th mat-header-cell *matHeaderCellDef> Title </th>
+                    <th mat-header-cell *matHeaderCellDef style="min-width: 120px;"> Title </th>
                     <td mat-cell *matCellDef="let element"> {{element.title}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="slug">
-                    <th mat-header-cell *matHeaderCellDef> Slug </th>
+                    <th mat-header-cell *matHeaderCellDef style="min-width: 120px;"> Slug </th>
                     <td mat-cell *matCellDef="let element"> {{element.slug}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef> Description </th>
-                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                    <th mat-header-cell *matHeaderCellDef style="min-width: 200px;"> Description </th>
+                    <td mat-cell *matCellDef="let element"> 
+                        <div class="text-clamp-2">{{element.description}}</div>    
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="dueDate">
-                    <th mat-header-cell *matHeaderCellDef> dueDate </th>
+                    <th mat-header-cell *matHeaderCellDef style="min-width: 100px;"> Due Date </th>
                     <td mat-cell *matCellDef="let element"> {{element.dueDate}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="status">
-                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <th mat-header-cell *matHeaderCellDef style="min-width: 90px;"> Status </th>
                     <td mat-cell *matCellDef="let element"> {{element.status}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <th mat-header-cell *matHeaderCellDef style="min-width: 50px;"> Action </th>
                     <td mat-cell *matCellDef="let element">
                         <button mat-icon-button aria-label="Delete" color="warn" (click)="removeTask(element)">
                             <mat-icon>delete</mat-icon>
