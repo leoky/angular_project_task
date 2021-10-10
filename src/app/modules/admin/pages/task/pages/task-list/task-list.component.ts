@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TaskService } from 'src/app/modules/admin/service/task.service';
+import { TaskService } from 'src/app/modules/admin/services/task.service';
 import { Task } from '../../../project/models/task';
 
 @Component({

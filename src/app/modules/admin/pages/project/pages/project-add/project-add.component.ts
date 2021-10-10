@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TaskService } from 'src/app/modules/admin/service/task.service';
+import { TaskService } from 'src/app/modules/admin/services/task.service';
 import { ProjectService } from 'src/app/modules/admin/services/project.service';
 import { Task } from '../../models/task';
 

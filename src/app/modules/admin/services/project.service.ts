@@ -4,7 +4,7 @@ import { ls_name } from 'src/environments/environment';
 
 import { Project } from '../pages/project/models/project';
 import { Task } from '../pages/project/models/task';
-import { TaskService } from '../service/task.service';
+import { TaskService } from '../services/task.service';
 
 @Injectable({
   providedIn: 'root'

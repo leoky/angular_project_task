@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TaskService } from 'src/app/modules/admin/service/task.service';
+import { TaskService } from 'src/app/modules/admin/services/task.service';
 
 import { ProjectService } from 'src/app/modules/admin/services/project.service';
 
