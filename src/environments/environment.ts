@@ -3,10 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  api: 'https://project-task-api.herokuapp.com/api',
 };
 
 export const ls_name = {
+  TOKEN: 'access_token',
   PROJECT: 'project',
   TASK: 'task',
 };

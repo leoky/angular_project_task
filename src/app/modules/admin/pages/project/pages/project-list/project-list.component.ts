@@ -33,11 +33,16 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit(): void {
-    this.projectService.getProjects().pipe(takeUntil(this.destroy$)).subscribe(projects => {
-      if (projects) {
-        this.projects = projects;
+    // this.projectService.getProjects().pipe(takeUntil(this.destroy$)).subscribe(projects => {
+    //   if (projects) {
+    //     this.projects = projects;
+    //   }
+    // })
+    this.projectService.getProjects().subscribe(result => {
+      if (result) {
+        this.projects = result;
       }
-    })
+    });
   }
   ngOnDestroy(): void {
     this.destroy$.next(true);

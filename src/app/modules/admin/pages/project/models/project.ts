@@ -7,4 +7,10 @@ export interface Project {
     description?: string;
     manager: string;
     tasks?: Task[];
+    created_at?: Date;
+    created_by?: string;
+    delete_at?: string;
+    manager_id?: string;
+    managed_by?: string;
+    user_id?: string;
 }

@@ -1,6 +1,9 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ls_name } from 'src/environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { environment, ls_name } from 'src/environments/environment';
 
 import { Project } from '../pages/project/models/project';
 import { Task } from '../pages/project/models/task';
@@ -11,14 +14,31 @@ import { TaskService } from '../services/task.service';
 })
 export class ProjectService {
 
+  baseurl = `${environment.api}/projects`;
+
   private projectsBS = new BehaviorSubject<Project[]>([]);
   projects$ = this.projectsBS.asObservable();
 
-  constructor(private taskService: TaskService) {
+  constructor(
+    private http: HttpClient,
+    private snakeBar: MatSnackBar,
+    private taskService: TaskService,
+  ) {
     this.getLS();
   }
 
+
   getProjects(): Observable<Project[]> {
+    return this.http.get<Project[]>(`${this.baseurl}`)
+      .pipe(
+        tap(result => {
+          return result;
+        },
+          catchError(this.handleError)
+        )
+      )
+  }
+  getProjectss(): Observable<Project[]> {
     return this.projects$;
   }
 
@@ -64,5 +84,14 @@ export class ProjectService {
     if (projects) {
       this.projectsBS.next(JSON.parse(projects));
     }
+  }
+  private handleError = (error: HttpErrorResponse) => {
+    if (error.error instanceof ErrorEvent) {
+      console.error(`An error occurred ${error.error.message}`);
+      this.snakeBar.open(`An error occurred ${error.error.message}`);
+    } else {
+      this.snakeBar.open(`An error occurred: ${error.status} - ${error.error.error}`);
+    }
+    return throwError(error);
   }
 }
