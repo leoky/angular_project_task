@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { ProjectService } from 'src/app/modules/admin/services/project.service';
+import { DialogConfirmationComponent } from '../../components/dialog-confirmation/dialog-confirmation.component';
 import { Project } from '../../models/project';
 
 @Component({
@@ -23,6 +25,7 @@ export class ProjectListComponent implements OnInit {
   constructor(
     private projectService: ProjectService,
     private router: Router,
+    public dialog: MatDialog,
   ) { }
 
   goToDetail(project: Project): void {
@@ -37,6 +40,23 @@ export class ProjectListComponent implements OnInit {
       });
     }
   }
+  openDialog(id: string): void {
+    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+      data: {
+        title: 'Delete Project?',
+        message: 'Include all tasks under this project',
+        data: {
+          id
+        }
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.id) {
+        this.removeProject(result.id);
+      }
+    })
+  }
+
   getData(): void {
     this.loading = true;
     this.projectService.getProjects().subscribe(result => {

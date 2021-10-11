@@ -105,8 +105,7 @@ export class TaskAddComponent implements OnInit {
       const form = this.taskForm.getRawValue();
       const body = {
         ...form,
-        project_id: form.project?.value,
-        assigned_to: form.user?.value,
+        assigned_to: form.assigned_to_user_id,
       };
       if (this.id) {
         this.taskService.updateTask(body, this.id).subscribe(result => {

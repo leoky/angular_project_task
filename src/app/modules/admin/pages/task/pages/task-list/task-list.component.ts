@@ -30,7 +30,9 @@ export class TaskListComponent implements OnInit {
   }
   removeTask(id: string): void {
     if (id) {
-      this.taskService.deleteTask(id);
+      this.taskService.deleteTask(id).subscribe(result => {
+        this.getData();
+      });
     }
   }
   getData(query = ''): void {

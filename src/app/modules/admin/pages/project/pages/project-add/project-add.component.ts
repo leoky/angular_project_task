@@ -98,7 +98,7 @@ export class ProjectAddComponent implements OnInit {
       const body = {
         name: form.name,
         description: form.description,
-        manager_id: form.manager?.value
+        manager_id: form.manager_id,
       };
 
       if (this.id) {
