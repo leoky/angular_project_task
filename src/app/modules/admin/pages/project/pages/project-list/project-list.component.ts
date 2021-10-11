@@ -1,7 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { ProjectService } from 'src/app/modules/admin/services/project.service';
 import { Project } from '../../models/project';
 
@@ -10,12 +8,13 @@ import { Project } from '../../models/project';
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })
-export class ProjectListComponent implements OnInit, OnDestroy {
+export class ProjectListComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'slug', 'description', 'manager', 'action'];
   projects: Project[] | [] = [];
+  loading = false;
 
-  destroy$: Subject<boolean> = new Subject<boolean>();
+  // destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private projectService: ProjectService,
@@ -29,24 +28,24 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
   removeProject(id: string): void {
     if (id) {
-      this.projectService.deleteProject(id);
+      this.projectService.deleteProject(id).subscribe(result => {
+        this.getData();
+      });
     }
   }
-  ngOnInit(): void {
-    // this.projectService.getProjects().pipe(takeUntil(this.destroy$)).subscribe(projects => {
-    //   if (projects) {
-    //     this.projects = projects;
-    //   }
-    // })
+  getData(): void {
+    this.loading = true;
     this.projectService.getProjects().subscribe(result => {
       if (result) {
+        this.loading = false;
         this.projects = result;
       }
+    }, () => {
+      this.loading = false;
     });
   }
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.complete();
-  }
 
+  ngOnInit(): void {
+    this.getData();
+  }
 }

@@ -22,19 +22,19 @@
             <ng-container matColumnDef="description">
                 <th mat-header-cell *matHeaderCellDef style="min-width: 300px;"> Project Description </th>
                 <td mat-cell *matCellDef="let element"> 
-                    <div class="text-clamp-2">{{element.description}} </div>
+                    <div class="text-clamp-2">{{element.description || '-'}} </div>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="manager">
                 <th mat-header-cell *matHeaderCellDef style="min-width: 200px;"> Manager </th>
-                <td mat-cell *matCellDef="let element"> {{element.manager}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.managed_by}} </td>
             </ng-container>
 
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef style="min-width: 50px;"> Action </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-icon-button aria-label="Delete" color="warn" (click)="removeProject(element.id)">
+                    <button mat-icon-button aria-label="Delete" color="warn" (click)=" $event.stopPropagation(); removeProject(element.id)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>
@@ -44,4 +44,5 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="cursor-pointer" (click)="goToDetail(row)"></tr>
         </table>
     </div>
+    <mat-spinner diameter="40" class="m-x-a w-100p m-t-3" *ngIf="loading"></mat-spinner>
 </div>

@@ -11,6 +11,7 @@ import { ProjectListItemComponent } from './components/project-list-item/project
 
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     SharedModule,
     MatTableModule,
     MatIconModule,
+    MatSelectModule,
   ]
 })
 export class ProjectModule { }

@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment, ls_name } from 'src/environments/environment';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -33,12 +33,30 @@ export class AuthService {
         catchError(this.handleError)
       )
   }
+
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.api}/lookups/users`)
+      .pipe(
+        map(result => {
+          const newResult = Object.keys(result).map((key) => {
+            return {
+              value: key,
+              label: result[Number(key)]
+            }
+          });
+          return newResult;
+        }),
+        catchError(this.handleError)
+      )
+  }
+
   private handleError = (error: HttpErrorResponse) => {
-    if (error.error instanceof ErrorEvent) {
-      console.error(`An error occurred ${error.error.message}`);
-      this.snakeBar.open(`An error occurred ${error.error.message}`);
-    } else {
-      this.snakeBar.open(`An error occurred: ${error.status} - ${error.error.error}`);
+    if (error.error && error.error.error) {
+      let err = error.error.error;
+      if (typeof error.error.error === 'object') {
+        err = JSON.stringify(error.error.error);
+      }
+      this.snakeBar.open(`Error: ${error.status} - ${err}`);
     }
     return throwError(error);
   }

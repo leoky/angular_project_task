@@ -5,7 +5,7 @@ export interface Project {
     name: string;
     slug?: string;
     description?: string;
-    manager: string;
+    manager?: any;
     tasks?: Task[];
     created_at?: Date;
     created_by?: string;
