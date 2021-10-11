@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
@@ -24,19 +24,25 @@ export class ProjectService {
   }
 
 
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.baseurl}`)
+  getProjects(query = ''): Observable<Project[]> {
+    let params = new HttpParams().set('keyword', query);
+    return this.http.get<Project[]>(`${this.baseurl}`, { params })
       .pipe(
         catchError(this.handleError)
       )
   }
   getProjectOptions(): Observable<Option[]> {
-    return this.http.get<Project[]>(`${this.baseurl}`)
+    return this.http.get<Project[]>(`${environment.api}/lookups/projects`)
       .pipe(
-        map(result => result.map(project => ({
-          value: project.id?.toString(),
-          label: project.name
-        }))),
+        map(result => {
+          const newResult = Object.keys(result).map((key) => {
+            return {
+              value: key.toString(),
+              label: result[Number(key)]
+            }
+          });
+          return newResult;
+        }),
         catchError(this.handleError)
       )
   }

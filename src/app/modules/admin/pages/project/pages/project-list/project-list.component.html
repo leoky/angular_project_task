@@ -1,8 +1,14 @@
 <div>
-    <button mat-raised-button color="primary" class="m-b-3" routerLink="./add">Add New Project</button>
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+        <button mat-raised-button color="primary" class="m-b-3" routerLink="./add">Add New Project</button>
+        <mat-form-field appearance="standard" floatLabel="always" fxFlex formControll>
+            <mat-label>Search</mat-label>
+            <input matInput placeholder="Input Project Name" [formControl]="search">
+        </mat-form-field>
+    </div>
 
     <div class="w-100p overflow-a">
-        <table mat-table [dataSource]="projects" class="mat-elevation-z0 w-100p">
+        <table mat-table [dataSource]="filterProjects" class="mat-elevation-z0 w-100p">
 
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef style="min-width: 50px;"> ID </th>

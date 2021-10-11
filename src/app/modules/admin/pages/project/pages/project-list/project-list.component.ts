@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { ProjectService } from 'src/app/modules/admin/services/project.service';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { Project } from '../../models/project';
@@ -13,8 +15,11 @@ export class ProjectListComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'slug', 'description', 'manager', 'action'];
   projects: Project[] | [] = [];
+  filterProjects: Project[] | [] = [];
   loading = false;
   userId = '';
+
+  search = new FormControl('');
 
   constructor(
     private projectService: ProjectService,
@@ -40,6 +45,7 @@ export class ProjectListComponent implements OnInit {
       if (result) {
         this.loading = false;
         this.projects = result;
+        this.filterProjects = result;
       }
     }, () => {
       this.loading = false;
@@ -49,5 +55,17 @@ export class ProjectListComponent implements OnInit {
   ngOnInit(): void {
     this.getData();
     this.userId = this.authService.getAuth()?.id || '';
+
+    this.search.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => { this.loading = true }),
+      switchMap(value => this.projectService.getProjects(value))
+    ).subscribe(result => {
+      this.loading = false;
+      this.projects = result;
+    }, () => {
+      this.loading = false;
+    });
   }
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { TaskService } from 'src/app/modules/admin/services/task.service';
 import { Task } from '../../../project/models/task';
 
@@ -15,7 +16,7 @@ export class TaskListComponent implements OnInit {
   tasks: Task[] | [] = [];
   loading = false;
 
-  destroy$: Subject<boolean> = new Subject<boolean>();
+  search = new FormControl('');
 
   constructor(
     private taskService: TaskService,
@@ -32,9 +33,9 @@ export class TaskListComponent implements OnInit {
       this.taskService.deleteTask(id);
     }
   }
-  getData(): void {
+  getData(query = ''): void {
     this.loading = true;
-    this.taskService.getTasks().subscribe(result => {
+    this.taskService.getTasks(query).subscribe(result => {
       if (result) {
         this.loading = false;
         this.tasks = result;
@@ -45,5 +46,17 @@ export class TaskListComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getData();
+
+    this.search.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => { this.loading = true }),
+      switchMap(value => this.taskService.getTasks(value))
+    ).subscribe(result => {
+      this.loading = false;
+      this.tasks = result;
+    }, () => {
+      this.loading = false;
+    });
   }
 }

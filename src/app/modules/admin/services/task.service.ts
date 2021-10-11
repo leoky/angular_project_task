@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
@@ -18,8 +18,9 @@ export class TaskService {
   ) {
   }
 
-  getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.baseurl}`)
+  getTasks(query = ''): Observable<Task[]> {
+    let params = new HttpParams().set('keyword', query);
+    return this.http.get<Task[]>(`${this.baseurl}`, { params })
       .pipe(
         catchError(this.handleError)
       )
