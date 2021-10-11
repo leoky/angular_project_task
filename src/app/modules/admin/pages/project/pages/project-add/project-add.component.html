@@ -31,8 +31,11 @@
                 </mat-form-field>
 
                 <div class="m-t-3"></div>
-                <button mat-raised-button color="primary" class="w-100p" type="submit" [disabled]="!projectForm.valid"
-                    *ngIf="!loading">{{ id? 'Update' : 'Create'}}</button>
+                <ng-container *ngIf="authorize">
+                    <button mat-raised-button color="primary" class="w-100p" type="submit" [disabled]="!projectForm.valid"
+                        *ngIf="!loading">{{ id? 'Update' : 'Create'}}</button>
+                </ng-container>
+                
                 <mat-spinner diameter="40" class="m-x-a w-100p" *ngIf="loading"></mat-spinner>
             </form>
         </mat-card>

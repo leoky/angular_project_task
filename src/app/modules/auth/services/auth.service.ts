@@ -18,6 +18,12 @@ export class AuthService {
 
   baseurl = `${environment.api}/auth`;
 
+  private user: Auth | undefined;
+
+  public getAuth(): Auth | undefined {
+    return this.user;
+  }
+
   public getToken(): string | null {
     return localStorage.getItem(ls_name.TOKEN);
   }
@@ -62,7 +68,7 @@ export class AuthService {
     return this.http.post<Auth>(`${this.baseurl}/me`, null)
       .pipe(
         tap(result => {
-          console.log(result)
+          this.user = result;
         }),
         catchError(this.handleError)
       )
