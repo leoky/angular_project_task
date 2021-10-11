@@ -21,7 +21,6 @@ export class ProjectAddComponent implements OnInit {
   loading = false;
   loadingTask = false;
 
-  authorize = true;
 
   projectForm = this.fb.group({
     id: [
@@ -67,11 +66,9 @@ export class ProjectAddComponent implements OnInit {
 
   getDetail(id: string): void {
     this.loading = true;
-    const userId = this.authService.getAuth()?.id;
     this.projectService.getProjectDetail(id).subscribe(result => {
       if (result) {
         this.loading = false;
-        this.authorize = (userId === result.manager_id || userId === result.user_id);
         this.projectForm.patchValue({
           ...result,
           manager_id: result.manager_id?.toString()

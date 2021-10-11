@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { ProjectService } from 'src/app/modules/admin/services/project.service';
-import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { Project } from '../../models/project';
 
 @Component({
@@ -24,7 +23,6 @@ export class ProjectListComponent implements OnInit {
   constructor(
     private projectService: ProjectService,
     private router: Router,
-    private authService: AuthService,
   ) { }
 
   goToDetail(project: Project): void {
@@ -54,7 +52,6 @@ export class ProjectListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
-    this.userId = this.authService.getAuth()?.id || '';
 
     this.search.valueChanges.pipe(
       debounceTime(500),
