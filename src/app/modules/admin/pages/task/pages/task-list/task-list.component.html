@@ -10,14 +10,14 @@
             </ng-container>
 
             <ng-container matColumnDef="projectId">
-                <th mat-header-cell *matHeaderCellDef style="min-width: 100px;"> Project ID </th>
-                <td mat-cell *matCellDef="let element"> {{element.projectId}} </td>
+                <th mat-header-cell *matHeaderCellDef style="min-width: 100px;"> Project Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.project_name}} </td>
             </ng-container>
 
 
             <ng-container matColumnDef="user">
                 <th mat-header-cell *matHeaderCellDef style="min-width: 100px;"> User </th>
-                <td mat-cell *matCellDef="let element"> {{element.user}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.assigned_to_user}} </td>
             </ng-container>
 
             <ng-container matColumnDef="title">
@@ -32,14 +32,14 @@
 
             <ng-container matColumnDef="description">
                 <th mat-header-cell *matHeaderCellDef style="min-width: 100px;"> Description </th>
-                <td mat-cell *matCellDef="let element"> 
-                    <div class="text-clamp-2">{{element.description}}</div>    
+                <td mat-cell *matCellDef="let element">
+                    <div class="text-clamp-2">{{element.description || '-'}}</div>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="dueDate">
                 <th mat-header-cell *matHeaderCellDef style="min-width: 100px;"> Due Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.dueDate}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.due_date}} </td>
             </ng-container>
 
             <ng-container matColumnDef="status">
@@ -50,7 +50,8 @@
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef style="min-width: 100px;"> Action </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-icon-button aria-label="Delete" color="warn" (click)="removeTask(element.id)">
+                    <button mat-icon-button aria-label="Delete" color="warn"
+                        (click)="$event.stopPropagation();removeTask(element.id)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>
@@ -61,4 +62,5 @@
                 (click)="goToDetail(row)"></tr>
         </table>
     </div>
+    <mat-spinner diameter="40" class="m-x-a w-100p m-t-3" *ngIf="loading"></mat-spinner>
 </div>

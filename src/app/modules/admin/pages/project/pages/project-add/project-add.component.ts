@@ -14,10 +14,12 @@ import { Option } from 'src/app/core/models/Option';
 })
 export class ProjectAddComponent implements OnInit {
   id: string | null = null;
-  displayedColumns: string[] = ['id', 'user', 'title', 'slug', 'description', 'dueDate', 'status', 'action'];
+  displayedColumns: string[] = ['id', 'user', 'title', 'slug', 'dueDate', 'status', 'action'];
   tasks: Task[] = [];
   userOption: Option[] = [];
+
   loading = false;
+  loadingTask = false;
 
   projectForm = this.fb.group({
     id: [
@@ -52,26 +54,16 @@ export class ProjectAddComponent implements OnInit {
       this.id = params.get('id');
       if (this.id) {
         this.getDetail(this.id);
+        this.getTask(this.id);
       }
     });
 
     this.authService.getUsers().subscribe(result => {
       this.userOption = result;
     });
-
-    // this.projectForm.get('name')?.valueChanges.subscribe(e => {
-    //   this.projectForm.patchValue({
-    //     slug: e.replace(/ /g, '-')
-    //   });
-    // });
   }
 
   getDetail(id: string): void {
-    // const project = this.projectService.getProjectDetail(id);
-    // if (project) {
-    //   this.projectForm.patchValue(project);
-    //   this.tasks = project.tasks ? project.tasks : [];
-    // }
     this.loading = true;
     this.projectService.getProjectDetail(id).subscribe(result => {
       if (result) {
@@ -86,6 +78,18 @@ export class ProjectAddComponent implements OnInit {
       }
     }, (error) => {
       this.loading = false;
+    })
+  }
+
+  getTask(id: string): void {
+    this.loadingTask = true;
+    this.projectService.getProjectTasks(id).subscribe(result => {
+      if (result) {
+        this.loadingTask = false;
+        this.tasks = result;
+      }
+    }, (error) => {
+      this.loadingTask = false;
     })
   }
 
@@ -125,8 +129,16 @@ export class ProjectAddComponent implements OnInit {
   }
 
   removeTask(id: string): void {
-    if (id) {
-      this.taskService.deleteTask(id);
+    if (id && this.id) {
+      this.loadingTask = true;
+      this.taskService.deleteTask(id).subscribe(result => {
+        if (this.id) {
+          this.loadingTask = false;
+          this.getTask(this.id);
+        }
+      }, () => {
+        this.loadingTask = false;
+      });
     }
   }
 }

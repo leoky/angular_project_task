@@ -2,21 +2,26 @@
     <h2>{{id ? 'Detail Task' : 'Add New Task'}}</h2>
     <mat-card ngStyle.gt-xs="width: 60%">
         <form [formGroup]="taskForm">
-            <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
+            <mat-form-field appearance="outline" floatLabel="always" class="w-100p" *ngIf="id">
                 <mat-label>ID*</mat-label>
                 <input matInput placeholder="Input ID" formControlName="id">
             </mat-form-field>
             <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
                 <mat-label>Project ID*</mat-label>
-                <mat-select formControlName="projectId">
-                    <mat-option *ngFor="let project of projectOption" [value]="project?.value">
+                <mat-select formControlName="project" placeholder="Select One">
+                    <mat-option *ngFor="let project of projectOption" [value]="project">
                         {{project?.label | titlecase}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+
             <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
-                <mat-label>User*</mat-label>
-                <input matInput placeholder="Input User" formControlName="user">
+                <mat-label>Assigned To User*</mat-label>
+                <mat-select formControlName="user" placeholder="Select One">
+                    <mat-option *ngFor="let user of userOption" [value]="user">
+                        {{user?.label | titlecase}}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
 
             <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap.gt-xs="16px">
@@ -24,7 +29,7 @@
                     <mat-label>Title*</mat-label>
                     <input matInput placeholder="Input Title" formControlName="title">
                 </mat-form-field>
-                <mat-form-field appearance="outline" floatLabel="always" fxFlex>
+                <mat-form-field appearance="outline" floatLabel="always" fxFlex *ngIf="id">
                     <mat-label>Slug*</mat-label>
                     <input matInput placeholder="" formControlName="slug">
                 </mat-form-field>
@@ -46,16 +51,20 @@
 
                 <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
                     <mat-label>Due Date</mat-label>
-                    <input matInput placeholder="Input Due Date" type="date" formControlName="dueDate">
+                    <input matInput placeholder="Input Due Date" type="date" formControlName="due_date">
                 </mat-form-field>
             </div>
 
-          <div class="m-t-3" fxLayout="row" fxLayoutGap="16px">
-            <button mat-raised-button color="primary"[disabled]="!taskForm.valid" fxFlex.gt-xs="200px" fxFlex (click)="submit()">
-                {{id? 'Update' : 'Create'}}
-            </button>
-            <button mat-button fxFlex.gt-xs="120px" fxFlex (click)="showMore = !showMore">{{showMore ? 'Hide' : 'More'}} Options</button>
-          </div>
+            <div class="m-t-3" fxLayout="row" fxLayoutGap="16px">
+                <div fxFlex.gt-xs="200px" fxFlex>
+                    <button mat-raised-button color="primary" class="w-100p" [disabled]="!taskForm.valid" (click)="submit()" *ngIf="!loading">
+                        {{id? 'Update' : 'Create'}}
+                    </button>
+                    <mat-spinner diameter="40" class="m-x-a w-100p" *ngIf="loading"></mat-spinner>
+                </div>
+                <button mat-button fxFlex.gt-xs="120px" fxFlex (click)="showMore = !showMore">{{showMore ? 'Hide' :
+                    'More'}} Options</button>
+            </div>
         </form>
     </mat-card>
 </div>

@@ -13,6 +13,7 @@ import { Task } from '../../../project/models/task';
 export class TaskListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'projectId', 'user', 'title', 'slug', 'description', 'dueDate', 'status', 'action'];
   tasks: Task[] | [] = [];
+  loading = false;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -31,26 +32,18 @@ export class TaskListComponent implements OnInit {
       this.taskService.deleteTask(id);
     }
   }
-  ngOnInit(): void {
-    this.taskService.getTasks().pipe(takeUntil(this.destroy$)).subscribe(tasks => {
-      // if (projects) {
-      //   let tasks: Task[] = [];
-      //   projects.forEach(project => {
-      //     if (project.tasks && project.tasks.length > 0) {
-      //       project.tasks.forEach(t => {
-      //         tasks.push(t);
-      //       });
-      //     }
-      //   });
-      //   this.tasks = tasks;
-      // }
-      if (tasks) {
-        this.tasks = tasks;
+  getData(): void {
+    this.loading = true;
+    this.taskService.getTasks().subscribe(result => {
+      if (result) {
+        this.loading = false;
+        this.tasks = result;
       }
-    })
+    }, () => {
+      this.loading = false;
+    });
   }
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.complete();
+  ngOnInit(): void {
+    this.getData();
   }
 }

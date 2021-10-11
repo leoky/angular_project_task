@@ -1,6 +1,9 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ls_name } from 'src/environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { environment, ls_name } from 'src/environments/environment';
 import { Task } from '../pages/project/models/task';
 
 @Injectable({
@@ -9,56 +12,65 @@ import { Task } from '../pages/project/models/task';
 export class TaskService {
   private tasksBS = new BehaviorSubject<Task[]>([]);
   tasks$ = this.tasksBS.asObservable();
+  private baseurl = `${environment.api}/tasks`;
 
-  constructor() {
-    this.getLS();
+  constructor(
+    private http: HttpClient,
+    private snakeBar: MatSnackBar,
+  ) {
   }
 
   getTasks(): Observable<Task[]> {
-    return this.tasks$;
+    return this.http.get<Task[]>(`${this.baseurl}`)
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
-  getTaskDetail(id: string): Task | undefined {
-    const tasks = [...this.tasksBS.value];
-    return tasks.find(task => task.id === id);
+  getTaskDetail(id: string): Observable<Task> {
+    return this.http.get<Task>(`${this.baseurl}/${id}`)
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
-  createTask(task: Task): void {
-    const tasks = [...this.tasksBS.value];
-    tasks.push(task);
-    this.tasksBS.next(tasks);
-    this.saveToLS(tasks);
+  createTask(task: Task): Observable<Task> {
+    return this.http.post<Task>(`${this.baseurl}`, task)
+      .pipe(
+        tap(result => {
+          this.snakeBar.open('Task has been created');
+        }),
+        catchError(this.handleError)
+      )
   }
-  updateTask(task: Task): void {
-    const tasks = [...this.tasksBS.value];
-    const projectIndex = tasks.findIndex(proj => proj.id?.toString() === task.id?.toString());
-    if (projectIndex >= 0) {
-      tasks[projectIndex] = task;
-      this.tasksBS.next(tasks);
-      this.saveToLS(tasks);
+  updateTask(data: Task, id: string): Observable<Task> {
+    return this.http.put<Task>(`${this.baseurl}/${id}`, data)
+      .pipe(
+        tap(result => {
+          this.snakeBar.open('Task has been updated');
+        }),
+        catchError(this.handleError)
+      )
+  }
+
+  deleteTask(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseurl}/${id}`)
+      .pipe(
+        tap(result => {
+          this.snakeBar.open('Task has been deleted');
+        }),
+        catchError(this.handleError)
+      )
+  }
+
+  private handleError = (error: HttpErrorResponse) => {
+    if (error.error && error.error.error) {
+      let err = error.error.error;
+      if (typeof error.error.error === 'object') {
+        err = JSON.stringify(error.error.error);
+      }
+      this.snakeBar.open(`Error: ${error.status} - ${err}`);
     }
-  }
-
-  deleteTask(id: string): void {
-    const tasks = [...this.tasksBS.value];
-    const newTasks = tasks.filter(task => task.id !== id);
-    this.tasksBS.next(newTasks);
-    this.saveToLS(newTasks);
-  }
-
-  getTasksPerProject(projectId: string): Task[] {
-    const tasks = [...this.tasksBS.value];
-    return tasks.filter(task => task.projectId === projectId);
-  }
-
-  // ls
-  saveToLS(tasks: Task[]): void {
-    localStorage.setItem(ls_name.TASK, JSON.stringify(tasks));
-  }
-  getLS() {
-    const tasks = localStorage.getItem(ls_name.TASK);
-    if (tasks) {
-      this.tasksBS.next(JSON.parse(tasks));
-    }
+    return throwError(error);
   }
 }

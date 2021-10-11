@@ -1,34 +1,36 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { TaskService } from 'src/app/modules/admin/services/task.service';
 
 import { ProjectService } from 'src/app/modules/admin/services/project.service';
-
-interface Option {
-  label?: string;
-  value?: string;
-}
+import { Option } from 'src/app/core/models/Option';
+import { AuthService } from 'src/app/modules/auth/services/auth.service';
 @Component({
   selector: 'app-task-add',
   templateUrl: './task-add.component.html',
   styleUrls: ['./task-add.component.scss']
 })
-export class TaskAddComponent implements OnInit, OnDestroy {
+export class TaskAddComponent implements OnInit {
 
   id: string | null = null;
   statusOption = ['to do', 'doing', 'done'];
   projectOption: Option[] = [];
+  userOption: Option[] = [];
+  loading = false;
   // ui
   showMore = false;
 
   taskForm = this.fb.group({
-    id: ['', Validators.required],
-    projectId: ['', Validators.required],
-    user: ['', Validators.required],
+    id: [
+      {
+        value: '',
+        disabled: true,
+      },
+      Validators.required],
+    project: [null, Validators.required],
+    user: [null, Validators.required],
     title: ['', Validators.required],
     slug: [
       {
@@ -38,7 +40,7 @@ export class TaskAddComponent implements OnInit, OnDestroy {
       Validators.required
     ],
     description: [''],
-    dueDate: [''],
+    due_date: [''],
     status: [this.statusOption[0], Validators.required],
   });
 
@@ -54,14 +56,13 @@ export class TaskAddComponent implements OnInit, OnDestroy {
     ],
   };
 
-  destroy$: Subject<boolean> = new Subject<boolean>();
-
   constructor(
     private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
     private projectService: ProjectService,
     private taskService: TaskService,
-    private router: Router,
-    private route: ActivatedRoute
+    private authService: AuthService,
   ) { }
 
   ngOnInit(): void {
@@ -72,44 +73,55 @@ export class TaskAddComponent implements OnInit, OnDestroy {
       }
     });
     // get list project id
-    this.projectService.getProjects().pipe(takeUntil(this.destroy$)).subscribe(projects => {
-      if (projects) {
-        this.projectOption = projects.map(project => {
-          return {
-            value: project.id,
-            label: project.name
-          };
-        });
-      }
+    this.projectService.getProjectOptions().subscribe(result => {
+      this.projectOption = result;
     });
-    this.taskForm.get('title')?.valueChanges.subscribe(e => {
-      this.taskForm.patchValue({
-        slug: e.replace(/ /g, '-')
-      });
+    // get list user
+    this.authService.getUsers().subscribe(result => {
+      this.userOption = result;
     });
   }
 
   getDetail(id: string): void {
-    const task = this.taskService.getTaskDetail(id);
+    this.loading = true;
+    this.taskService.getTaskDetail(id).subscribe(task => {
+      if (task) {
+        this.loading = false;
+        this.taskForm.patchValue({
+          ...task,
+        });
+      }
+    }, () => {
+      this.loading = false;
+    });
 
-    if (task) {
-      this.taskForm.patchValue(task);
-    }
   }
 
   submit(): void {
     if (this.taskForm.value && this.taskForm.valid) {
+      this.loading = true;
+      const form = this.taskForm.getRawValue();
+      const body = {
+        ...form,
+        project_id: form.project?.value,
+        assigned_to: form.user?.value,
+      };
       if (this.id) {
-        this.taskService.updateTask(this.taskForm.getRawValue());
+        this.taskService.updateTask(body, this.id).subscribe(result => {
+          if (result) {
+            this.loading = false;
+          }
+        }, () => {
+          this.loading = false;
+        });
       } else {
-        this.taskService.createTask(this.taskForm.getRawValue());
+        this.taskService.createTask(body).subscribe(result => {
+          this.loading = false;
+          this.router.navigate(['/admin/tasks']);
+        }, () => {
+          this.loading = false;
+        })
       }
-      this.router.navigate(['/admin/tasks']);
     }
   }
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.complete();
-  }
-
 }

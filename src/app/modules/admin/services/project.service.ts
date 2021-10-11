@@ -2,10 +2,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
+import { Option } from 'src/app/core/models/Option';
 import { environment } from 'src/environments/environment';
 
 import { Project } from '../pages/project/models/project';
+import { Task } from '../pages/project/models/task';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +32,24 @@ export class ProjectService {
         catchError(this.handleError)
       )
   }
+  getProjectOptions(): Observable<Option[]> {
+    return this.http.get<Project[]>(`${this.baseurl}`)
+      .pipe(
+        map(result => result.map(project => ({
+          value: project.id,
+          label: project.name
+        }))),
+        catchError(this.handleError)
+      )
+  }
+
+  getProjectTasks(id: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.baseurl}/${id}/tasks`)
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
+
   getProjectDetail(id: string): Observable<Project> {
     return this.http.get<Project>(`${this.baseurl}/${id}`)
       .pipe(
