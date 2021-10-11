@@ -8,8 +8,8 @@
             </mat-form-field>
             <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
                 <mat-label>Project ID*</mat-label>
-                <mat-select formControlName="project" placeholder="Select One">
-                    <mat-option *ngFor="let project of projectOption" [value]="project">
+                <mat-select formControlName="project_id" placeholder="Select One">
+                    <mat-option *ngFor="let project of projectOption" [value]="project?.value">
                         {{project?.label | titlecase}}
                     </mat-option>
                 </mat-select>
@@ -17,8 +17,8 @@
 
             <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
                 <mat-label>Assigned To User*</mat-label>
-                <mat-select formControlName="user" placeholder="Select One">
-                    <mat-option *ngFor="let user of userOption" [value]="user">
+                <mat-select formControlName="assigned_to_user_id" placeholder="Select One">
+                    <mat-option *ngFor="let user of userOption" [value]="user?.value">
                         {{user?.label | titlecase}}
                     </mat-option>
                 </mat-select>

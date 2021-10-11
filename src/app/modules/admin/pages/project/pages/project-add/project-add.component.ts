@@ -16,7 +16,7 @@ export class ProjectAddComponent implements OnInit {
   id: string | null = null;
   displayedColumns: string[] = ['id', 'user', 'title', 'slug', 'dueDate', 'status', 'action'];
   tasks: Task[] = [];
-  userOption: Option[] = [];
+  userOption: Option[] =[];
 
   loading = false;
   loadingTask = false;
@@ -37,7 +37,7 @@ export class ProjectAddComponent implements OnInit {
       Validators.required
     ],
     description: [''],
-    manager: ['', Validators.required],
+    manager_id: ['', Validators.required],
   })
 
   constructor(
@@ -70,10 +70,7 @@ export class ProjectAddComponent implements OnInit {
         this.loading = false;
         this.projectForm.patchValue({
           ...result,
-          manager: {
-            value: result.manager_id,
-            label: result.managed_by
-          }
+          manager_id: result.manager_id?.toString()
         });
       }
     }, (error) => {

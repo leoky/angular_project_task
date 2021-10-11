@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/modules/auth/services/auth.service';
 export class TaskAddComponent implements OnInit {
 
   id: string | null = null;
-  statusOption = ['to do', 'doing', 'done'];
+  statusOption = ['To Do', 'Doing', 'Done'];
   projectOption: Option[] = [];
   userOption: Option[] = [];
   loading = false;
@@ -29,8 +29,8 @@ export class TaskAddComponent implements OnInit {
         disabled: true,
       },
       Validators.required],
-    project: [null, Validators.required],
-    user: [null, Validators.required],
+    project_id: ['', Validators.required],
+    assigned_to_user_id: ['', Validators.required],
     title: ['', Validators.required],
     slug: [
       {
@@ -89,6 +89,8 @@ export class TaskAddComponent implements OnInit {
         this.loading = false;
         this.taskForm.patchValue({
           ...task,
+          assigned_to_user_id: task.assigned_to_user_id?.toString(),
+          project_id: task.project_id?.toString(),
         });
       }
     }, () => {

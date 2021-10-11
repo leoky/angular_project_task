@@ -23,8 +23,8 @@
 
                 <mat-form-field appearance="outline" floatLabel="always" class="w-100p">
                     <mat-label>Project Manager*</mat-label>
-                    <mat-select formControlName="manager" placeholder="Select One">
-                        <mat-option *ngFor="let user of userOption" [value]="user">
+                    <mat-select formControlName="manager_id" placeholder="Select One">
+                        <mat-option *ngFor="let user of userOption" [value]="user?.value">
                             {{user?.label | titlecase}}
                         </mat-option>
                     </mat-select>

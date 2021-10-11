@@ -34,7 +34,7 @@ export class ProjectService {
     return this.http.get<Project[]>(`${this.baseurl}`)
       .pipe(
         map(result => result.map(project => ({
-          value: project.id,
+          value: project.id?.toString(),
           label: project.name
         }))),
         catchError(this.handleError)

@@ -76,7 +76,7 @@ export class AuthService {
         map(result => {
           const newResult = Object.keys(result).map((key) => {
             return {
-              value: key,
+              value: key.toString(),
               label: result[Number(key)]
             }
           });
