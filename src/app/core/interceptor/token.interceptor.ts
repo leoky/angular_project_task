@@ -30,8 +30,8 @@ export class TokenInterceptor implements HttpInterceptor {
       tap(
         () => { },
         (error: HttpErrorResponse) => {
-          if (error.status !== 405) return;
-          this.router.navigate(['/']);
+          if (error.status !== 401) return;
+          this.router.navigate(['/auth/login']);
           localStorage.removeItem(ls_name.TOKEN);
         }
       )

@@ -9,9 +9,7 @@ import { environment } from 'src/environments/environment';
 import { Project } from '../pages/project/models/project';
 import { Task } from '../pages/project/models/task';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ProjectService {
 
   baseurl = `${environment.api}/projects`;

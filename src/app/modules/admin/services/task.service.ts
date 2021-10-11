@@ -6,9 +6,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment, ls_name } from 'src/environments/environment';
 import { Task } from '../pages/project/models/task';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TaskService {
   private tasksBS = new BehaviorSubject<Task[]>([]);
   tasks$ = this.tasksBS.asObservable();

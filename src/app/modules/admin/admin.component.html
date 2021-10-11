@@ -15,10 +15,22 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-        <mat-toolbar color="primary" class="toolbar-content">
+        <mat-toolbar color="primary" class="toolbar-content" fxLayout="row">
             <button mat-icon-button (click)="sidenav.toggle()">
                 <mat-icon>menu</mat-icon>
             </button>
+            <div class="m-l-a">
+                <button mat-button [matMenuTriggerFor]="menu">
+                    <div fxFlex="row" fxLayoutAlign="center center">
+                        <div>{{name || '...'}}</div>
+                        <mat-icon class="m-l-1">account_circle</mat-icon>
+                    </div>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="logOut()">Log Out</button>
+                </mat-menu>
+
+            </div>
 
         </mat-toolbar>
         <router-outlet></router-outlet>
